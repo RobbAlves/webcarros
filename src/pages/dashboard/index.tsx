@@ -35,17 +35,22 @@ export function Dashboard() {
 
   useEffect(() => {
     function loadingCars() {
+      console.log("Loading user cars for dashboard...");
       if (!user?.uid) {
+        console.log("No user UID available");
         return;
       }
+      console.log("User UID:", user.uid);
       const carRef = collection(db, "cars")
       const queryRef = query(carRef, where("uid", "==", user.uid))
 
       getDocs(queryRef)
         .then((snapshot) => {
+          console.log("Dashboard snapshot received:", snapshot);
           let listcars = [] as CarsProps[];
 
           snapshot.forEach(doc => {
+            console.log("Dashboard car doc:", doc.id, doc.data());
             listcars.push({
               id: doc.id,
               name: doc.data().name,
@@ -58,8 +63,11 @@ export function Dashboard() {
             })
           })
 
+          console.log("Dashboard cars loaded:", listcars);
           setCars(listcars);
-          console.log(listcars)
+        })
+        .catch((error) => {
+          console.error("Error loading dashboard cars:", error);
         })
     }
 

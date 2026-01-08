@@ -40,14 +40,17 @@ export function Home() {
 
   
     function loadingCars() {
+      console.log("Loading cars...");
       const carRef = collection(db, "cars")
       const queryRef = query(carRef, orderBy("created", "desc"))
 
       getDocs(queryRef)
         .then((snapshot) => {
+          console.log("Snapshot received:", snapshot);
           let listcars = [] as CarsProps[];
 
           snapshot.forEach(doc => {
+            console.log("Car doc:", doc.id, doc.data());
             listcars.push({
               id: doc.id,
               name: doc.data().name,
@@ -60,7 +63,11 @@ export function Home() {
             })
           })
 
+          console.log("Cars loaded:", listcars);
           setCars(listcars);
+        })
+        .catch((error) => {
+          console.error("Error loading cars:", error);
         })
     }
 

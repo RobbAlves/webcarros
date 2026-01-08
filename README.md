@@ -46,6 +46,20 @@ WebCarros é uma aplicação web desenvolvida para facilitar o gerenciamento e a
    - Crie um novo projeto ou use um existente.
    - Ative a Authentication e o Firestore Database.
    - Copie as configurações do SDK (API Key, etc.) para o arquivo `src/services/firebaseConnection.ts`.
+   - **Importante**: Configure as regras de segurança do Firestore:
+     - Vá para Firestore Database > Rules
+     - Substitua as regras por:
+       ```
+       rules_version = '2';
+       service cloud.firestore {
+         match /databases/{database}/documents {
+           match /{document=**} {
+             allow read, write: if true;
+           }
+         }
+       }
+       ```
+     - Clique em "Publicar"
 
 4. **Execute o projeto em modo de desenvolvimento**:
    ```bash
@@ -75,6 +89,28 @@ webcarros/
 ├── vite.config.ts          # Configuração do Vite
 └── tailwind.config.js      # Configuração do Tailwind CSS
 ```
+
+## Troubleshooting
+
+### Carros não aparecem na aplicação
+
+Se os carros não estiverem sendo exibidos, verifique:
+
+1. **Regras do Firestore**: Certifique-se de que as regras de segurança do Firestore permitem leitura dos dados. Vá para Firebase Console > Firestore Database > Rules e verifique se as regras estão configuradas corretamente.
+
+2. **Dados no Firestore**: Verifique se há documentos na coleção "cars" no Firebase Console > Firestore Database > Data.
+
+3. **Configuração do Firebase**: Confirme se as credenciais no arquivo `src/services/firebaseConnection.ts` estão corretas.
+
+4. **Console do navegador**: Abra o console do navegador (F12) e verifique se há erros relacionados ao Firebase.
+
+### Erro de build na Vercel
+
+Se ocorrer erro de TypeScript durante o deploy:
+
+1. Execute `npm run build` localmente para verificar erros.
+2. Certifique-se de que todas as importações estão sendo usadas.
+3. Verifique se há variáveis não utilizadas causando warnings.
 
 ## Scripts Disponíveis
 
